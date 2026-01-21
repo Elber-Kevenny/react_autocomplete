@@ -7,7 +7,7 @@ import { Autocomplete } from './components/Autocomplete';
 export const App: React.FC = () => {
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
-  const handlerSelected = (person: Person | null) => {
+  const handleSelected = (person: Person | null) => {
     setSelectedPerson(person);
   };
 
@@ -23,7 +23,7 @@ export const App: React.FC = () => {
         <Autocomplete
           person={peopleFromServer}
           delay={300}
-          onSelected={handlerSelected}
+          onSelected={handleSelected}
           selectedPerson={selectedPerson}
         />
       </main>

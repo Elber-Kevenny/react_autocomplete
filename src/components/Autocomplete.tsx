@@ -29,7 +29,7 @@ export const Autocomplete: React.FC<Props> = ({
   selectedPerson,
 }) => {
   const [query, setQuery] = useState<string>(''); // caroulos
-  const [appliedQuery, setAppliedQuery] = useState('');
+  const [appliedQuery, setAppliedQuery] = useState(''); // duvida pq ter essa appliedQuery e de onde ela vem
 
   const [isActive, setIsActive] = useState<boolean>(false);
 
@@ -42,7 +42,7 @@ export const Autocomplete: React.FC<Props> = ({
   };
 
   const applyQuery = useMemo(
-    () => debounce((value: string) => setAppliedQuery(value), delay),
+    () => debounce((value: string) => setAppliedQuery(value), delay), // appliedQuery tera o mesmo valor de query
     [delay],
   );
 
@@ -52,13 +52,17 @@ export const Autocomplete: React.FC<Props> = ({
     setQuery(newValue);
     applyQuery(newValue);
 
-    if (newValue.length !== selectedPerson?.name.length) {
+    if (newValue !== selectedPerson?.name) {
       onSelected(null);
     }
   };
 
   const suggestions = useMemo(() => {
     const normalized = appliedQuery.trim().toLowerCase();
+
+    if (normalized.length === 0) {
+      return person;
+    }
 
     return person.filter(item => {
       const nam = item.name.toLowerCase();
@@ -84,11 +88,11 @@ export const Autocomplete: React.FC<Props> = ({
         </div>
         <div className="dropdown-menu" role="menu" data-cy="suggestions-list">
           <div className="dropdown-content">
-            {suggestions.map((people, i) => (
+            {suggestions.map((people) => (
               <div
                 className="dropdown-item"
                 data-cy="suggestion-item"
-                key={i + 1}
+                key={people.slug}
               >
                 <a
                   href="#"
@@ -107,7 +111,7 @@ export const Autocomplete: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      {suggestions.length === 0 && (
+      {suggestions.length === 0 && appliedQuery.length !== 0 && (
         <div
           className="
             notification
